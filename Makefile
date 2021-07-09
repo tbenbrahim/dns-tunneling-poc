@@ -1,13 +1,14 @@
 CC = gcc
 LD = gcc
 
+ODIR = obj
+DIST = dist
+
 CFLAGS = -Wall -pipe -pedantic -Werror
 OFLAGS = -c -I/usr/include
 LFLAGS = $(CFLAGS) -L/usr/lib/
-EXECUTABLE = dns-server
 
 SOURCES = $(wildcard *.c)
-OBJECTS = $(SOURCES:.c=.o)
 
 DEBUG = no
 PROFILE = no
@@ -25,21 +26,26 @@ endif
 
 CFLAGS += $(OPTIMIZATION)
 
-all: dns-server
+all: $(DIST)/dns-server
 
-dist:
-	mkdir dist
+$(DIST):
+	mkdir $(DIST)
 
-dns-server: $(OBJECTS) dist
-	$(CC) $(OBJECTS) $(CFLAGS) -o dist/$(EXECUTABLE)
+DNS_SERVER_OBJECTS = $(ODIR)/dns-server.o $(ODIR)/dns.o $(ODIR)/debug.o
 
-%.o: %.c
+$(DIST)/dns-server: $(DNS_SERVER_OBJECTS)  $(DIST)
+	$(CC) $(DNS_SERVER_OBJECTS) $(CFLAGS) -o $@
+
+$(ODIR):
+	mkdir $(ODIR)
+
+$(ODIR)/%.o: %.c $(ODIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf *.o $(EXECUTABLE)
+	rm -rf $(ODIR) dist
 
 rebuild: clean all
 
-.PHONY : clean
+.PHONY : clean rebuild
 .SILENT : clean
