@@ -24,7 +24,8 @@
 #include <sys/types.h>
 
 void print_buffer(unsigned char *buffer, size_t len) {
-  unsigned char preview[16];
+  unsigned char preview[17];
+  preview[16] = '\0';
   memset(preview, ' ', 16);
   for (int i = 0; i < len; ++i) {
     if (i && i % 16 == 0) {

@@ -18,6 +18,11 @@ Since the POC server really cannot resolve anything, you may want to edit `/etc/
 
 WSL requires Internet Connection Sharing which uses port 53. It is therefore not possible to run the server.
 
+
+## Dependencies
+
+- Debian package `uuid-dev`
+
 ## Open Source Software  used
 
 Base32 encoder/decoder from [Google Authenticator PAM module](https://github.com/google/google-authenticator-libpam)
