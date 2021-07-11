@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a proof of concept for a DNS tunnelling client and server, for security education. The DNS server implemented here is woefully incomplete, as the point is not to resolve names, but to participate in file transfers. The server only handles A and AAAA queries with a single name, and responds to A queries with the same IP (16.32.64.128), and to AAAA queries with a repsonse indicating an IPv6 address is not available, as per [RFC 4074 section 3](https://datatracker.ietf.org/doc/html/rfc4074#section-3).
+This is a proof of concept for a DNS tunnelling client and server, for security education. The DNS server implemented here is woefully incomplete, as the point is not to resolve names, but to participate in file transfers. The server only handles A and AAAA queries with a single name, and responds to A queries with the same IP address (16.32.64.128), and to AAAA queries with a repsonse indicating an IPv6 address is not available, as per [RFC 4074 section 3](https://datatracker.ietf.org/doc/html/rfc4074#section-3).
 
 ## Theory of operation
 
