@@ -21,21 +21,33 @@
  */
 
 #include <arpa/inet.h>
+#include <bsd/string.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "base32.h"
 #include "debug.h"
 #include "dns.h"
+#include "payload.h"
 
 #define TTL 300
 
+void save_data(struct dns_query *dns_query);
+
 int main(int argc, char **argv) {
   printf("dns-server 0.0.1 😉\n");
+
+  struct stat stat_info = {0};
+  if (stat("./data", &stat_info) == -1) {
+    mkdir("./data", 0777);
+  }
+
   int sockfd;
   unsigned char buffer[MAX_BUFFER_SIZE];
   struct sockaddr_in servaddr, cliaddr;
@@ -73,6 +85,9 @@ int main(int argc, char **argv) {
     struct dns_query name_query;
     extract_dns_query(buffer, &name_query);
     debug_name(&name_query);
+    if (ntohs(header->id) == 1337) {
+      save_data(&name_query);
+    }
 
     int response_length = prepare_response(&name_query, buffer, num_received,
                                            300, "16.32.64.128");
@@ -84,4 +99,28 @@ int main(int argc, char **argv) {
     printf("Response:\n");
     print_buffer(buffer, response_length);
   }
+}
+
+void save_data(struct dns_query *dns_query) {
+  uint8_t base32_buf[300] = {0};
+  for (int i = 0; i < dns_query->num_segments - 2; ++i) {
+    strlcat((char *)base32_buf, dns_query->segment[i], 1024);
+  }
+  uint8_t payload_buf[300];
+  base32_decode(base32_buf, payload_buf, 300);
+  struct dns_payload *payload = (struct dns_payload *)payload_buf;
+  printf("Payload: %d\n", payload->length);
+  print_buffer(payload_buf, sizeof(struct dns_payload));
+  char uuid[256];
+  uuid_unparse(payload->uuid, uuid);
+  printf("uuid %s, sequence %d, length %d\n", uuid, payload->sequence,
+         payload->length);
+  char filename[100] = "./data/file-\0";
+  strlcat(filename, uuid, 100);
+  FILE *fout = fopen(filename, "a+b");
+  fseek(fout, 120 * payload->sequence, 0);
+  fwrite(payload->data, 1, payload->length, fout);
+  fclose(fout);
+  printf("Wrote %d bytes to %s at offset %d\n", payload->length, filename,
+         payload->sequence * 120);
 }

@@ -6,7 +6,7 @@ DIST = dist
 
 CFLAGS = -Wall -pipe -pedantic -Werror
 OFLAGS = -c -I/usr/include
-LFLAGS = $(CFLAGS) -L/usr/lib/ -luuid 
+LFLAGS = $(CFLAGS) -L/usr/lib/ -luuid -lbsd 
 
 SOURCES = $(wildcard *.c)
 
@@ -31,12 +31,12 @@ all: $(DIST)/dns-server $(DIST)/dns-send
 $(DIST):
 	mkdir $(DIST)
 
-DNS_SERVER_OBJECTS = $(ODIR)/dns-server.o $(ODIR)/dns.o $(ODIR)/debug.o
+DNS_SERVER_OBJECTS = $(ODIR)/dns-server.o $(ODIR)/dns.o $(ODIR)/debug.o $(ODIR)/base32.o 
 DNS_SEND_OBJECTS = $(ODIR)/dns-send.o $(ODIR)/base32.o  $(ODIR)/debug.o 
 
 
 $(DIST)/dns-server: $(DNS_SERVER_OBJECTS)  $(DIST)
-	$(CC) $(DNS_SERVER_OBJECTS) $(CFLAGS) -o $@
+	$(CC) $(DNS_SERVER_OBJECTS) $(CFLAGS)  $(LFLAGS) -o $@
 
 $(DIST)/dns-send: $(DNS_SEND_OBJECTS)  $(DIST)
 	$(CC) $(DNS_SEND_OBJECTS) $(CFLAGS) $(LFLAGS) -o $@

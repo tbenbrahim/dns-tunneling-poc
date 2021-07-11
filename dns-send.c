@@ -20,7 +20,7 @@ void resolve(unsigned char *name_buf, size_t name_size);
 
 int main(int argc, char **argv) {
   if (argc > 3) {
-    fprintf(stderr, "Usage: %s [file] [ip]\n", argv[0]);
+    fprintf(stderr, "Usage: %s [file [ip][\n", argv[0]);
     exit(-1);
   }
 
@@ -30,6 +30,11 @@ int main(int argc, char **argv) {
   struct dns_payload payload;
   uuid_copy(payload.uuid, session_id);
   payload.sequence = 0;
+  char uuid[256];
+  char uuid2[256];
+  uuid_unparse(payload.uuid, uuid);
+  uuid_unparse(session_id, uuid2);
+  printf("uuid: %s %s\n", uuid, uuid2);
 
   int direct = argc == 3;
   struct in_addr direct_ip;
@@ -47,11 +52,14 @@ int main(int argc, char **argv) {
   }
   unsigned char base32_data_buf[256];
   while (!feof(fin)) {
-    payload.length = fread(payload.data, 1, BLOCKSIZE, fin);
+    payload.length = (uint8_t)fread(payload.data, 1, BLOCKSIZE, fin);
+    printf("payload length:%d\n", payload.length);
     if (payload.length != BLOCKSIZE && ferror(fin)) {
       fprintf(stderr, "Unable to read file\n");
       exit(-1);
     }
+    printf("Payload:\n");
+    print_buffer((unsigned char *)&payload, sizeof(struct dns_payload));
 
     size_t num_written =
         base32_encode((uint8_t *)&payload,

@@ -32,6 +32,9 @@ void extract_dns_query(unsigned char *dns_buffer,
   name_query->num_segments = 0;
   uint8_t segment_size;
   while ((segment_size = *((uint8_t *)query_ptr))) {
+    if (segment_size > 63) { // malformed request
+      return;
+    }
     strncpy(name_query->segment[name_query->num_segments],
             (char *)(query_ptr + 1), segment_size);
     name_query->segment[name_query->num_segments][segment_size] = '\0';

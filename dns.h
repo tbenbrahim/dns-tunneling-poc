@@ -72,7 +72,7 @@ struct __attribute__((__packed__)) dns_response_trailer {
 
 struct dns_query {
   size_t num_segments;
-  char segment[10][63];
+  char segment[10][64];
   uint16_t type;
   uint16_t qclass;
 };
