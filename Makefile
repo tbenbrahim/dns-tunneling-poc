@@ -1,6 +1,7 @@
 CC = gcc
 LD = gcc
 
+SRC = src
 ODIR = obj
 DIST = dist
 
@@ -14,17 +15,6 @@ DEBUG = no
 PROFILE = no
 PEDANTIC = no
 OPTIMIZATION = -O3
-
-ifeq ($(DEBUG), yes)
-	CFLAGS += -g
-	OPTIMIZATION = -O0
-endif
-
-ifeq ($(PROFILE), yes)
-	CFLAGS += -pg
-endif
-
-CFLAGS += $(OPTIMIZATION)
 
 all: $(DIST)/dns-server $(DIST)/dns-send
 
@@ -45,7 +35,7 @@ $(DIST)/dns-send: $(DNS_SEND_OBJECTS)  $(DIST)
 $(ODIR):
 	mkdir $(ODIR)
 
-$(ODIR)/%.o: %.c $(ODIR)
+$(ODIR)/%.o: $(SRC)/%.c $(ODIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
