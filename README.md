@@ -48,7 +48,7 @@ Since the POC server really cannot resolve anything, you may want to edit `/etc/
 WSL requires Internet Connection Sharing which uses port 53. It is therefore not possible to run the server.
 
 ## Detecting DNS tunnelling
-Due to nature of DNS tunneling, there are serveral methods to detect it, and thereafter prenvent it. See the [Deteing DNS Tunelling ](https://www.sans.org/white-papers/34152/) whitepaper from the SANS institute for examples.
+Due to nature of DNS tunneling, there are serveral methods to detect it, and thereafter prenvent it. See the [Detecting DNS Tunelling](https://www.sans.org/white-papers/34152/) paper from the SANS institute for examples.
 
 
 ## Dependencies
