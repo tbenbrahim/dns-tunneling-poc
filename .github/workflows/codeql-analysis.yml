@@ -41,6 +41,7 @@ jobs:
     #    uses a compiled language
 
     - run: |
+       apt install uuid-dev libbsd-dev
        make rebuild
 
     - name: Perform CodeQL Analysis
