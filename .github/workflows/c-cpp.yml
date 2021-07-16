@@ -18,6 +18,7 @@ jobs:
     - name: make
       run: make rebuild
     - name: Update release
+      uses: johnwbyrd/update-release@v1
       with:
         release: v1
         token: ${{ secrets.GITHUB_TOKEN }}
