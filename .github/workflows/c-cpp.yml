@@ -18,8 +18,8 @@ jobs:
     - name: make
       run: make rebuild
     - name: Update release
-      uses: johnwbyrd/update-release@v1
+      uses: johnwbyrd/update-release@v1.0.0
       with:
-        release: v1
+        release: tbenbrahim/dns-tunneling-poc@v1
         token: ${{ secrets.GITHUB_TOKEN }}
         files: dist/dns-server dist/dns-send
