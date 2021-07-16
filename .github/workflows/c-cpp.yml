@@ -1,0 +1,24 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: deps
+      run: sudo apt install uuid-dev libbsd-dev
+    - name: make
+      run: make rebuild
+    - name: Update release
+      with:
+        release: v1
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: dist/dns-server dist/dns-send
